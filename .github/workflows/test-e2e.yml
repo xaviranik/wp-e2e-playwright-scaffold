@@ -15,10 +15,10 @@ on:
 
 # Cancels all previous workflow runs for pull requests that have not completed.
 concurrency:
-    # The concurrency group contains the workflow name and the branch name for pull requests
-    # or the commit hash for any other events.
-    group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
-    cancel-in-progress: true
+  # The concurrency group contains the workflow name and the branch name for pull requests
+  # or the commit hash for any other events.
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+  cancel-in-progress: true
 
 jobs:
   run-e2e-test:
@@ -41,7 +41,15 @@ jobs:
 
       - name: Install Playwright dependencies
         run: |
-            npx playwright install chromium --with-deps
-      
+          npx playwright install chromium --with-deps
+
       - name: Run Playwright tests
         run: npm run test
+
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure() # run this step even if previous step failed
+        with:
+          name: Playwright tests # Name of the check run which will be created
+          path: results.xml # Path to test results
+          reporter: jest-junit # Format of test results
