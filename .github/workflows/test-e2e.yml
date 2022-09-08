@@ -56,9 +56,8 @@ jobs:
       - name: "Create a check run"
         uses: actions/github-script@v6
         env:
-          parameter_url: '${{ github.event.workflow_run.html_url }}'
+          parameter_url: 'https://boostimer.com'
         with:
-          debug: ${{ secrets.ACTIONS_STEP_DEBUG || false }}
           script: |
             await github.rest.checks.create({
               owner: context.repo.owner,
