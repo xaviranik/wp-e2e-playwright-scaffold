@@ -6,9 +6,9 @@ name: CI
 on:
   # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: ["main"]
+    branches: ["add/check-runs"]
   pull_request:
-    branches: ["main"]
+    branches: ["add/check-runs"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -53,3 +53,12 @@ jobs:
           name: Playwright tests # Name of the check run which will be created
           path: results.xml # Path to test results
           reporter: jest-junit # Format of test results
+      - name: Run checks
+        uses: LouisBrunner/checks-action@v1.1.1
+        if: always()
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: Test XYZ
+          conclusion: ${{ job.status }}
+          output: |
+            {"summary":${{ steps.test.outputs.summary }}}
