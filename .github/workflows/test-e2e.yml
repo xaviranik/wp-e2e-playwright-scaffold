@@ -55,9 +55,13 @@ jobs:
           reporter: jest-junit # Format of test results
       - name: Create status
         run: |
-          curl \
-          -X POST \
-          -H "Accept: application/vnd.github+json" \ 
-          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          https://api.github.com/repos/xaviranik/wp-e2e-playwright-scaffold/statuses/${{ github.event.workflow_run.head_commit.id }} \
-          -d '{"state":"success","target_url":"https://example.com/build/status","description":"The build succeeded!","context":"continuous-integration/jenkins"}'
+          curl --request POST \
+          --url https://api.github.com/repos/xaviranik/${{ github.repository }}/statuses/${{ github.event.pull_request.head.sha }} \
+          --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+          --header 'content-type: application/json' \
+          --data '{
+            "state": "${{ github.event.workflow_run.conclusion }}",
+            "context": "unit test (kube)",
+            "target_url": "https://boostimer.com"
+            }' \
+          --fail
