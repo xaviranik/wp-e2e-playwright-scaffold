@@ -53,24 +53,15 @@ jobs:
           name: Playwright tests # Name of the check run which will be created
           path: results.xml # Path to test results
           reporter: jest-junit # Format of test results
-      - name: "Create a check run"
-        uses: actions/github-script@v6
-        env:
-          parameter_url: 'https://boostimer.com'
-        with:
-          script: |
-            await github.rest.checks.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              head_sha: context.sha,
-              name: "my-check-name",
-              status: "completed",
-              conclusion: "${{ github.event.workflow_run.conclusion }}",
-              // This is safe, not string interpolation.
-              details_url: process.env.parameter_url,
-              output: {
-                title: "my check title",
-                summary: "my *check* summary",
-                text: "my text",
-              },
-            });
+      - name: Create status
+        run: |
+          curl --request POST \
+          --url https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.event.workflow_run.head_commit.id }} \
+          --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+          --header 'content-type: application/json' \
+          --data '{
+            "state": "${{ github.event.workflow_run.conclusion }}",
+            "context": "unit test (kube)",
+            "target_url": "https://boostimer.com"
+            }' \
+          --fail
