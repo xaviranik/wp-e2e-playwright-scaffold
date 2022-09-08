@@ -53,12 +53,15 @@ jobs:
           name: Playwright tests # Name of the check run which will be created
           path: results.xml # Path to test results
           reporter: jest-junit # Format of test results
-      - name: Run checks
-        uses: LouisBrunner/checks-action@v1.1.1
-        if: always()
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          name: Test XYZ
-          conclusion: ${{ job.status }}
-          action_url: https://boostimer.com
-          details_url: https://boostimer.com
+      - name: Create status
+        run: |
+          curl --request POST \
+          --url https://api.github.com/repos/xaviranik/${{ github.repository }}/statuses/${{ github.event.pull_request.head.sha }} \
+          --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+          --header 'content-type: application/json' \
+          --data '{
+            "state": "${{ github.event.workflow_run.conclusion }}",
+            "context": "unit test (kube)",
+            "target_url": "https://boostimer.com"
+            }' \
+          --fail
