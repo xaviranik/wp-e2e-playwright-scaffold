@@ -60,5 +60,5 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: Test XYZ
           conclusion: ${{ job.status }}
-          output: |
-            {"summary":${{ steps.test.outputs.summary }}}
+          action_url: https://boostimer.com
+          details_url: https://boostimer.com
