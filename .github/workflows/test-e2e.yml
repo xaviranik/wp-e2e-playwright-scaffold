@@ -59,8 +59,5 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: Test from PR
-          conclusion: ${{ job.status }}
-          action_url: https://example.com/action
+          conclusion: success
           details_url: https://example.com/details
-          actions: |
-            [{"label":"Click Me","description":"Click me to get Details","identifier":"sent_to_webhook"}]
