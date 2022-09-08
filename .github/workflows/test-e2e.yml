@@ -60,5 +60,4 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           name: Test from PR
           conclusion: ${{ job.status }}
-          action_url: https://boostimer.com
           details_url: https://boostimer.com
