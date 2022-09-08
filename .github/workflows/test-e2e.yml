@@ -58,7 +58,7 @@ jobs:
         if: always()
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          name: Test XYZ
+          name: Test from PR
           conclusion: ${{ job.status }}
           action_url: https://boostimer.com
           details_url: https://boostimer.com
